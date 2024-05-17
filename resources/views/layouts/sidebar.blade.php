@@ -58,6 +58,12 @@
                         <span>User</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->is('companies.show', 1) ? 'active' : '' }}">
+                    <a href="{{ route('companies.show', 1) }}" class='sidebar-link'>
+                        <i class="bi bi-collection-fill"></i>
+                        <span>Company</span>
+                    </a>
+                </li>
                 <hr>
                 <li class="sidebar-item">
                     <a href="#" class='sidebar-link'

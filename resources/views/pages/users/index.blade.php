@@ -5,7 +5,7 @@
 @section('content')
 
     @include('pages.users.add')
-    @include('sweetalert::alert')
+    @include('pages.users.edit')
     <section class="section">
         <div class="card">
             <div class="card-header">
@@ -43,6 +43,7 @@
                                                 rowspan="1" colspan="1" style="width: 250.8594px;">Name</th>
                                             <th tabindex="0" colspan="1" style="width: 250.344px;">Email</th>
                                             <th tabindex="0" colspan="1" style="width: 127.719px;">Phone</th>
+                                            <th tabindex="0" colspan="1" style="width: 127.719px;">Position</th>
                                             <th tabindex="0" colspan="1" style="width: 137.609px;">Role</th>
                                             <th tabindex="0" colspan="1" style="width: 11.4688px;">Action</th>
                                         </tr>
@@ -53,10 +54,11 @@
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->phone ?? '-' }}</td>
+                                                <td>{{ $user->position ?? '-' }}</td>
                                                 <td><span class="badge bg-success">{{ $user->role }}</span></td>
                                                 <td>
-                                                    <button href="" class="btn icon btn-primary"><i
-                                                            class="bi bi-pencil"></i></button>
+                                                    <button onclick="edit({{ $user->id }})"
+                                                        class="btn icon btn-primary"><i class="bi bi-pencil"></i></button>
 
                                                     <button onclick="confirmDelete('{{ $user->id }}')" href=""
                                                         class="btn icon btn-danger "><i class="bi bi-x"></i></button>
@@ -146,7 +148,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: error,
+                            text: xhr.responseJSON.message,
                             confirmButtonColor: '#435EBE'
                         });
                     }
@@ -183,11 +185,88 @@
                                 location.reload(); // Refresh halaman setelah penghapusan
                             },
                             error: function(xhr, status, error) {
-                                Swal.fire('Error!', error, 'error');
+                                Swal.fire('Error!', xhr.responseJSON.message, 'error');
                             }
                         });
                     }
                 });
+            }
+
+            function edit(id) {
+                event.preventDefault();
+                var formData = $('#dataForm_edit').serialize();
+                $.ajax({
+                    url: '/user/' + id + '/edit',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+
+                        // Memasukkan data ke dalam input di form edit
+                        $('#name_edit').val(response.name);
+                        $('#email_edit').val(response.email);
+                        $('#phone_edit').val(response.phone ?? '');
+                        $('#position_edit').val(response.position ?? '');
+                        $('#department_edit').val(response.department ?? '');
+                        $('#role_edit').val(response.role);
+
+                        // Anda dapat menambahkan baris kode serupa untuk setiap input yang perlu diisi
+                        $('#modal_edit').modal('show');
+
+                        // Jika Anda memiliki data lain yang perlu diisi dalam form, sesuaikan kode di atas sesuai dengan kunci respons JSON-nya
+                    },
+                    error: function(xhr, status, error) {
+                        // Tangani kesalahan jika permintaan Ajax gagal
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: xhr.responseJSON.message,
+                            confirmButtonColor: '#435EBE'
+                        });
+                    }
+                });
+
+                $(document).ready(function() {
+                    // Event listener untuk tombol submit
+                    $('#saveBtnEdit').click(function(event) {
+                        event.preventDefault(); // Mencegah tindakan default tombol submit
+
+                        // Serialize data form
+                        var formData = $('#dataForm_edit').serialize();
+
+                        // Kirim data form menggunakan AJAX
+                        $.ajax({
+                            url: '/user/' + id,
+                            method: 'POST',
+                            data: formData,
+
+                            success: function(response) {
+                                // Tangani respons sukses
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+
+                                window.location.reload();
+                                // Tambahkan kode untuk menampilkan pesan sukses atau melakukan tindakan lain yang diperlukan
+                            },
+                            error: function(xhr, status, error) {
+
+                                // Tangani kesalahan jika permintaan Ajax gagal
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: xhr.responseJSON.message,
+                                    confirmButtonColor: '#435EBE'
+                                });
+                            }
+                        });
+                    });
+                });
+
+
+
             }
         </script>
     @endpush

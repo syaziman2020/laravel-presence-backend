@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use RealRashid\SweetAlert\Facades\Alert;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 class UserController extends Controller
 {
@@ -44,6 +48,8 @@ class UserController extends Controller
                 'password' => 'required|min:6',
                 'phone' => 'required|min:5|max:16',
                 'role' => 'required',
+                'position' => 'nullable',
+                'department' => 'nullable',
             ]);
 
             User::create($request->all());
@@ -70,15 +76,63 @@ class UserController extends Controller
     public function edit(string $id)
     {
         //
+        try {
+
+            $user = User::findOrFail($id);
+
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage(), $e->getCode()]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi input
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $id,
+                'password' => 'nullable|min:6',
+                'phone' => 'nullable|min:5|max:16',
+                'role' => 'required',
+                'position' => 'nullable',
+                'department' => 'nullable',
+            ]);
+
+            // Temukan data user yang akan diupdate
+            $user = User::findOrFail($id);
+
+            // Lakukan pembaruan data user
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if ($request->password) {
+                $user->password = bcrypt($request->password);
+            }
+            $user->phone = $request->phone;
+            $user->position = $request->position;
+            $user->department = $request->department;
+            $user->role = $request->role;
+            $user->save();
+
+            // Kirim respon JSON untuk memberitahu bahwa pembaruan berhasil
+            return response()->json(['message' => 'User updated successfully'], 200);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => $e->getMessage(), 'errors' => $e->errors()], 422);
+        } catch (QueryException $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (HttpException $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getStatusCode());
+        } catch (HttpResponseException $e) {
+            return response()->json(['message' => 'Terjadi kesalahan dalam respons.'], 500);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
