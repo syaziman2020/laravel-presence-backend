@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CompanyController;
 use Illuminate\Http\Request;
@@ -15,4 +16,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/company', [CompanyController::class, 'show']);
+    Route::post('/checkin', [AttendanceController::class, 'check_in']);
+    Route::post('/checkout', [AttendanceController::class, 'check_out']);
+    Route::post('/is-checkin', [AttendanceController::class, 'is_checkin']);
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
 });

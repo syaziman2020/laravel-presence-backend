@@ -15,7 +15,7 @@ return new class extends Migration
             //
             $table->string('position')->nullable();
             $table->string('department')->nullable();
-            $table->string('face_embeddeding')->nullable();
+            $table->string('face_embedding')->nullable();
             $table->string('image_url')->nullable();
         });
     }

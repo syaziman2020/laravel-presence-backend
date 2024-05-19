@@ -64,6 +64,12 @@
                         <span>Company</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->is('attendances.index') ? 'active' : '' }}">
+                    <a href="{{ route('attendances.index') }}" class='sidebar-link'>
+                        <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
                 <hr>
                 <li class="sidebar-item">
                     <a href="#" class='sidebar-link'

@@ -7,7 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -50,5 +50,33 @@ class AuthController extends Controller
         } catch (Exception $e) {
             return response()->json(['message' => $e,]);
         }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'face_embedding' => 'required'
+        ]);
+
+        $user = $request->user();
+        $image = $request->file('image');
+        $face_embedding = $request->face_embedding;
+
+        // Cek apakah pengguna memiliki gambar lama dan hapus jika ada
+        if ($user->image_url) {
+            Storage::delete('public/images/' . $user->image_url);
+        }
+
+        // Simpan gambar baru
+        $image->storeAs('public/images', $image->hashName());
+        $user->image_url = $image->hashName();
+        $user->face_embedding = $face_embedding;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user,
+        ], 200);
     }
 }

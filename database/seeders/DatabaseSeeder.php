@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Attendance;
 use App\Models\Company;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -39,5 +40,7 @@ class DatabaseSeeder extends Seeder
             'time_in' => '2023-05-12 08:23:17',
             'time_out' => '2023-05-12 17:00:00'
         ]);
+
+        Attendance::factory(20)->create();
     }
 }
