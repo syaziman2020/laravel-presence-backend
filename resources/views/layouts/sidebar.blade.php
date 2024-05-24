@@ -44,7 +44,7 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }} ">
+                <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }} ">
                     <a href="{{ route('dashboard') }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
@@ -52,25 +52,25 @@
                 </li>
 
 
-                <li class="sidebar-item {{ request()->is('user.index') ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->routeIs('user.index') ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}" class='sidebar-link'>
                         <i class="bi bi-person-badge-fill"></i>
                         <span>User</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ request()->is('companies.show', 1) ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->routeIs('companies.show', 1) ? 'active' : '' }}">
                     <a href="{{ route('companies.show', 1) }}" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>
                         <span>Company</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ request()->is('attendances.index') ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->routeIs('attendances.index') ? 'active' : '' }}">
                     <a href="{{ route('attendances.index') }}" class='sidebar-link'>
                         <i class="bi bi-file-earmark-spreadsheet-fill"></i>
                         <span>Attendance</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ request()->is('permissions.index') ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->routeIs('permissions.index') ? 'active' : '' }}">
                     <a href="{{ route('permissions.index') }}" class='sidebar-link'>
                         <i class="bi bi-journal-check"></i>
                         <span>Permission</span>
