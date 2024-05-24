@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Attendance;
 use App\Models\Company;
+use App\Models\Permission;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,6 +29,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'remember_token' => Str::random(10),
             'email_verified_at' => now(),
+            'position' => 'CEO',
+            'department' => 'Untan'
         ]);
 
         Company::create([
@@ -42,5 +45,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Attendance::factory(20)->create();
+
+        Permission::factory(15)->create();
     }
 }

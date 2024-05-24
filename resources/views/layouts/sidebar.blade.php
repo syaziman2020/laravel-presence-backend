@@ -70,6 +70,12 @@
                         <span>Attendance</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->is('permissions.index') ? 'active' : '' }}">
+                    <a href="{{ route('permissions.index') }}" class='sidebar-link'>
+                        <i class="bi bi-journal-check"></i>
+                        <span>Permission</span>
+                    </a>
+                </li>
                 <hr>
                 <li class="sidebar-item">
                     <a href="#" class='sidebar-link'
