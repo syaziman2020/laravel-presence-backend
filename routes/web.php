@@ -11,7 +11,7 @@ Route::get('/', function () {
     return view('pages.auth.login');
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('user', UserController::class);
